@@ -8,7 +8,7 @@ import { motion } from 'framer-motion';
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } }
-};
+} as const; // 👈 ここに「as const」を追記;
 
 const staggerContainer = {
   hidden: { opacity: 0 },
@@ -18,7 +18,7 @@ const staggerContainer = {
       staggerChildren: 0.15
     }
   }
-};
+} as const; // 👈 ここに「as const」を追記;
 
 export default function Home() {
   return (
