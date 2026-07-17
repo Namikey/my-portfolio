@@ -81,7 +81,7 @@ export const careerTimeline: CareerTimelineItem[] = [
   {
     year: "2006年～",
     event: "異例の速さでプロジェクトマネージャに抜擢",
-    description: "大手Sierとの共同プロジェクトのPMに就任/nJavaを軸とした独自フレームワークを共同開発する"
+    description: "大手Sierとの共同プロジェクトのPMに就任。Javaを軸とした独自フレームワークを共同開発する"
   },
   {
     year: "2008年～",
@@ -101,7 +101,7 @@ export const careerTimeline: CareerTimelineItem[] = [
   {
     year: "2018年～",
     event: "「シンプルでかわいい」をコンセプトとした子供服ブランドをリリース",
-    description: "韓国OEMから国内ECモールを中心に販売/n新型コロナの影響により事業が低迷"
+    description: "韓国OEMから国内ECモールを中心に販売"
   },
   {
     year: "2024年～",
