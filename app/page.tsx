@@ -1,9 +1,17 @@
 'use client';
 
+
+'use client';
+
+import { useState } from 'react'; // 👈 追加
+import { personalInfo, skills, projects, careerTimeline } from '../portfolio-data';
+import { Briefcase, Cpu, Mail, FolderGit, Award, CheckCircle, Calendar, User, Zap, X } from 'lucide-react'; // 👈 末尾に X を追加
+import { motion, AnimatePresence } from 'framer-motion'; // 👈 AnimatePresence を追加
+/*
 import { personalInfo, skills, projects, careerTimeline } from '../portfolio-data';
 import { Briefcase, Cpu, Mail, FolderGit, Award, CheckCircle, Calendar, User, Zap } from 'lucide-react';
 import { motion } from 'framer-motion';
-
+*/
 // アニメーション設定
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -21,6 +29,9 @@ const staggerContainer = {
 } as const; // 👈 ここに「as const」を追記;
 
 export default function Home() {
+  // 以下の1行を必ず追加してください
+  const [selectedProjectIdx, setSelectedProjectIdx] = useState<number | null>(null);
+
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 font-sans overflow-x-hidden">
       {/* ヒーローセクション */}
@@ -222,12 +233,15 @@ export default function Home() {
           </motion.div>
         </section>
 
-        {/* 主要プロジェクト実績セクション */}
+       {/* 主要プロジェクト実績セクション */}
         <section id="projects" className="space-y-12">
           <div className="flex items-center gap-3 border-b border-slate-200 pb-3">
             <Briefcase className="text-indigo-600 w-6 h-6" />
             <h2 className="text-2xl font-bold text-slate-900">主要開発実績 (Featured Projects)</h2>
           </div>
+          
+          {/* Reactのステートで、現在詳細を開いているプロジェクトのインデックスを管理 (nullのときは閉じている) */}
+          {/* ※このuseState変数は、Home関数コンポーネントの直下（returnの前）に定義してください。 */}
           
           <div className="relative border-l-2 border-indigo-100 ml-4 md:ml-32 py-4 space-y-16">
             {projects.map((proj, idx) => (
@@ -272,7 +286,7 @@ export default function Home() {
                     </p>
                   </div>
 
-                  <div className="p-6 md:p-8 space-y-6">
+                  <div className="p-6 md:p-8 space-y-4">
                     <div className="flex flex-wrap gap-2">
                       {proj.tags.map((tag, tIdx) => (
                         <span key={tIdx} className="bg-slate-100 text-slate-700 text-xs font-medium px-2.5 py-1 rounded">
@@ -281,21 +295,86 @@ export default function Home() {
                       ))}
                     </div>
 
+                    {/* 概要文（Backgroundの最初の1文などをここに表示するか、または空欄でもOKです。ここではすっきりさせるためボタンのみにします） */}
+                    <div className="pt-2">
+                      <button 
+                        onClick={() => setSelectedProjectIdx(idx)}
+                        className="inline-flex items-center justify-center bg-indigo-50 hover:bg-indigo-100 text-indigo-600 text-sm font-semibold px-4 py-2.5 rounded-xl transition w-full md:w-auto shadow-sm border border-indigo-100"
+                      >
+                        詳細と実績を見る
+                      </button>
+                    </div>
+                  </div>
+                </article>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* 🌟 ポップアップ表示されるダイアログ本体（AnimatePresenceで消えるときのアニメーションも制御） */}
+          <AnimatePresence>
+            {selectedProjectIdx !== null && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+                {/* 背景の黒いもや（ここをクリックしても閉じられるようにする） */}
+                <motion.div 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  onClick={() => setSelectedProjectIdx(null)}
+                  className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"
+                />
+
+                {/* ダイアログの白いコンテンツボックス */}
+                <motion.div 
+                  initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.95, y: 20 }}
+                  transition={{ type: "spring", duration: 0.5 }}
+                  className="bg-white rounded-2xl shadow-xl border border-slate-200 w-full max-w-3xl max-h-[85vh] overflow-y-auto relative z-10 flex flex-col"
+                >
+                  {/* ヘッダー（タイトル固定） */}
+                  <div className="bg-slate-900 text-white p-6 sticky top-0 z-10 flex justify-between items-start gap-4">
+                    <div>
+                      <span className="text-indigo-400 text-xs font-semibold tracking-wider font-mono">
+                        {projects[selectedProjectIdx].period} | {projects[selectedProjectIdx].role}
+                      </span>
+                      <h3 className="text-xl md:text-2xl font-bold mt-1 text-white">
+                        {projects[selectedProjectIdx].title}
+                      </h3>
+                    </div>
+                    <button 
+                      onClick={() => setSelectedProjectIdx(null)}
+                      className="text-slate-400 hover:text-white bg-slate-800 p-2 rounded-full transition"
+                      aria-label="閉じる"
+                    >
+                      <X className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {/* スクロールする中身 */}
+                  <div className="p-6 md:p-8 space-y-6 overflow-y-auto">
+                    <div className="flex flex-wrap gap-2">
+                      {projects[selectedProjectIdx].tags.map((tag, tIdx) => (
+                        <span key={tIdx} className="bg-slate-100 text-slate-700 text-xs font-medium px-2.5 py-1 rounded">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+
                     <div className="space-y-2">
-                      <h4 className="font-bold text-slate-950 flex items-center gap-2 text-sm uppercase tracking-wider text-slate-450">
-                        <span>Background / Challenge</span>
+                      <h4 className="font-bold text-slate-950 text-sm uppercase tracking-wider text-indigo-600">
+                        Background / Challenge
                       </h4>
-                      <p className="text-slate-600 leading-relaxed text-sm md:text-base">
-                        {proj.background}
+                      <p className="text-slate-600 leading-relaxed text-sm md:text-base whitespace-pre-line">
+                        {projects[selectedProjectIdx].background}
                       </p>
                     </div>
 
                     <div className="space-y-3">
-                      <h4 className="font-bold text-slate-950 flex items-center gap-2 text-sm uppercase tracking-wider text-slate-450">
-                        <span>PM / SE Initiatives</span>
+                      <h4 className="font-bold text-slate-950 text-sm uppercase tracking-wider text-indigo-600">
+                        PM / SE Initiatives
                       </h4>
                       <ul className="space-y-3">
-                        {proj.highlights.map((highlight, hIdx) => {
+                        {projects[selectedProjectIdx].highlights.map((highlight, hIdx) => {
                           const splitIndex = highlight.indexOf(': ');
                           const title = splitIndex !== -1 ? highlight.substring(0, splitIndex) : '';
                           const desc = splitIndex !== -1 ? highlight.substring(splitIndex + 2) : highlight;
@@ -318,7 +397,7 @@ export default function Home() {
                         <span>Outcomes & Results</span>
                       </h4>
                       <ul className="space-y-2">
-                        {proj.outcomes.map((outcome, oIdx) => (
+                        {projects[selectedProjectIdx].outcomes.map((outcome, oIdx) => (
                           <li key={oIdx} className="flex items-start gap-2 text-slate-700 text-sm md:text-base">
                             <CheckCircle className="w-4 h-4 text-emerald-500 mt-1 flex-shrink-0" />
                             <span>{outcome}</span>
@@ -327,10 +406,20 @@ export default function Home() {
                       </ul>
                     </div>
                   </div>
-                </article>
-              </motion.div>
-            ))}
-          </div>
+                  
+                  {/* フッター（閉じるボタン固定） */}
+                  <div className="border-t border-slate-100 p-4 bg-slate-50 flex justify-end sticky bottom-0">
+                    <button 
+                      onClick={() => setSelectedProjectIdx(null)}
+                      className="bg-slate-800 hover:bg-slate-700 text-white text-sm font-semibold px-5 py-2 rounded-xl transition shadow-sm"
+                    >
+                      閉じる
+                    </button>
+                  </div>
+                </motion.div>
+              </div>
+            )}
+          </AnimatePresence>
         </section>
       </main>
 
