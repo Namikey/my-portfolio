@@ -128,7 +128,7 @@ export const skills: SkillCategory[] = [
       { name: "C# / .NET", level: 5 },
       { name: "PHP / Laravel", level: 3 },
       { name: "Java / Spring, Struts", level: 4 },
-      { name: "JavaScript / Ajax", level: 4 },
+      { name: "JavaScript / React / Next.js", level: 4 },
       { name: "VB.NET / VB6.0", level: 5 },
       { name: "CSS / HTML", level: 4 },
     ],

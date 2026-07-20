@@ -1,8 +1,5 @@
 'use client';
 
-
-'use client';
-
 import { useState } from 'react'; // 👈 追加
 import { personalInfo, skills, projects, careerTimeline } from '../portfolio-data';
 import { Briefcase, Cpu, Mail, FolderGit, Award, CheckCircle, Calendar, User, Zap, X } from 'lucide-react'; // 👈 末尾に X を追加
